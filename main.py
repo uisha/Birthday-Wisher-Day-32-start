@@ -28,15 +28,14 @@ for name, row in data.iterrows():
         chosen_letter = choice(letter_templates)
 
         with open(chosen_letter, "r") as letter:
-            greeting = letter.readlines()
+            message = letter.read()
 
-        greeting[0] = greeting[0].replace("[NAME]", str(row["name"]))
-        message = ''.join(greeting)
+        message = message.replace("[NAME]", row["name"])
         print(message)
 
         with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
             connection.starttls()
             connection.login(user=MY_EMAIL, password=PASSWORD)
             connection.sendmail(from_addr=MY_EMAIL,
-                                to_addrs=f"{row.email}",
+                                to_addrs=row.email,
                                 msg=f"Subject:Happy Birthday!\n\n{message}")
